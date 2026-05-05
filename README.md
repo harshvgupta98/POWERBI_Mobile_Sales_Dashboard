@@ -167,7 +167,7 @@ To deliver an interactive visual tool that:
 
 ## 📸 Dashboard Preview
 
-![Motorola Sales Dashboard](Motorola_Sales_Dashboard.png)
+![Motorola Sales Dashboard](https://github.com/harshvgupta98/POWERBI_Motorola_Sales_Dashboard/blob/main/Snapshot%20of%20Motorola%20Sales%20Dashboard.png)
 
 ---
 
