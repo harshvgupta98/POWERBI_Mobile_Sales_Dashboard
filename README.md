@@ -1,25 +1,25 @@
-# 📱 Motorola Sales Dashboard
+# 📱 Mobile Sales Dashboard
 
-A dynamic, interactive Power BI dashboard built to analyse Motorola mobile sales performance across cities, models, payment methods, and time periods across India.
+A dynamic, interactive Power BI dashboard analysing mobile sales performance across 19 Indian cities, 5 brands, 15 models, and 4 payment methods — covering 3,835 transactions over a full calendar year.
 
 ---
 
 ## 📌 Short Description / Purpose
 
-The **Motorola Sales Dashboard** is a visually engaging Power BI report designed to help sales teams and business leaders monitor mobile sales performance across Indian cities. The dashboard tracks total sales, quantity, transactions, and customer ratings — enabling data-driven decisions around product strategy, regional focus, and payment trends.
+The **Mobile Sales Dashboard** is a visually engaging Power BI report designed to help sales teams and business leaders monitor mobile sales performance across India. The dashboard tracks total revenue, quantity, transactions, and customer ratings — enabling data-driven decisions around product strategy, regional focus, customer segmentation, and payment trends.
 
 ---
 
 ## 🛠️ Tech Stack
 
-The dashboard was built using the following tools and technologies:
-
-- **📊 Power BI Desktop** – Main data visualization platform used for report creation.
-- **📂 Power Query** – Data transformation and cleaning layer for preparing the sales data.
-- **🧠 DAX (Data Analysis Expressions)** – Used for calculated measures such as `Total Sales`, `Total Quantity`, `Transactions`, and `Average`.
-- **🗺️ Power BI Map Visual** – Used to plot Total Sales by City across India (powered by TomTom / OpenStreetMap).
-- **📝 Data Modeling** – Single flat fact table (`Sales_Data`) with an auto-generated date table relationship for time intelligence.
-- **📁 File Format** – `.pbit` (Power BI Template) for portability and `.png` for dashboard preview.
+| Tool | Purpose |
+|------|---------|
+| **Power BI Desktop** | Main data visualisation platform |
+| **Power Query** | Data transformation and cleaning layer |
+| **DAX (Data Analysis Expressions)** | Calculated measures for KPIs and time intelligence |
+| **Power BI Map Visual** | Geographic sales distribution across India |
+| **Auto-generated Date Table** | Enables time intelligence (MoM comparisons) |
+| **File Format** | `.pbit` (Power BI Template) + `.xlsx` (source data) |
 
 ---
 
@@ -27,18 +27,26 @@ The dashboard was built using the following tools and technologies:
 
 | Measure | Expression | Description |
 |---------|------------|-------------|
-| `Total Sales` | `SUMX(Sales_Data, Sales_Data[Price Per Unit] * Sales_Data[Units Sold])` | Total revenue calculated as price × units for each row |
-| `Total Quantity` | `SUM(Sales_Data[Units Sold])` | Total units sold across all transactions |
-| `Transactions` | `COUNTROWS(Sales_Data)` | Total number of sales transactions |
-| `Average` | `AVERAGE(Sales_Data[Price Per Unit])` | Average price per unit across all models |
+| `Total Sales` | `SUMX(Sales_Data, Sales_Data[Price Per Unit] * Sales_Data[Units Sold])` | Revenue as price × units per row |
+| `Total Quantity` | `SUM(Sales_Data[Units Sold])` | Total units sold |
+| `Transactions` | `COUNTROWS(Sales_Data)` | Total transaction count |
+| `Avg Price Per Unit` | `AVERAGE(Sales_Data[Price Per Unit])` | Average selling price |
+| `MoM Sales Change` | `DIVIDE([Total Sales] - CALCULATE([Total Sales], PREVIOUSMONTH('Date'[Date])), CALCULATE([Total Sales], PREVIOUSMONTH('Date'[Date])))` | Month-over-month revenue change % |
+| `Attrition_Rate` | — | N/A for this project |
+
+> KPI cards use explicit measures throughout — no implicit aggregations.
 
 ---
 
 ## 📂 Data Source
 
-**Source**: Motorola mobile sales transactional dataset covering Indian cities.
+**Source**: Indian mobile sales transactional dataset  
+**Scope**: 3,835 transactions | 5 brands | 15 models | 19 cities | Full calendar year
 
-Data covering **4K transactions** across **19K units sold**, generating **₹769M in total sales**. The dataset is a single flat fact table (`Sales_Data`) containing transaction-level records with customer, product, location, and payment details.
+### Brands Covered
+Apple · Samsung · OnePlus · Vivo · Xiaomi
+
+> ⚠️ Note: This is a **multi-brand** Indian mobile sales dataset. The dashboard analyses all five brands comparatively — it is not limited to any single brand.
 
 ---
 
@@ -49,29 +57,31 @@ Data covering **4K transactions** across **19K units sold**, generating **₹769
 | Column | Type | Description |
 |--------|------|-------------|
 | `Transaction ID` | Int | Unique identifier for each sales transaction |
-| `Date` | DateTime | Date of the transaction |
-| `Day Name` | String | Day of the week (e.g. Monday, Saturday) |
-| `Brand` | String | Mobile brand name (e.g. Motorola, Samsung, Apple) |
-| `Mobile Model` | String | Specific model name (e.g. Galaxy Note 20, iPhone SE) |
-| `Units Sold` | Int | Number of units sold in the transaction |
-| `Price Per Unit` | Decimal | Selling price per unit in local currency |
-| `Customer Name` | String | Name of the customer |
-| `Customer Age` | Int | Age of the customer in years |
-| `City` | String | Indian city where the sale took place |
-| `Payment Method` | String | Payment method used — UPI, Debit Card, Credit Card, Cash |
-| `Customer Ratings` | Int | Customer satisfaction rating (1=Lowest, 5=Highest) |
+| `Day` | Int | Day of the month |
+| `Month` | Int | Month number (1–12) |
+| `Year` | Int | Calendar year |
+| `Day Name` | String | Day of week (Monday–Sunday) |
+| `Brand` | String | Mobile brand (Apple, Samsung, OnePlus, Vivo, Xiaomi) |
+| `Mobile Model` | String | Specific model (e.g., iPhone SE, Galaxy Note 20) |
+| `Units Sold` | Int | Number of units sold per transaction |
+| `Price Per Unit` | Decimal | Selling price per unit (₹) |
+| `Customer Name` | String | Customer name |
+| `Customer Age` | Int | Customer age (18–59 years) |
+| `City` | String | Indian city of sale (19 cities) |
+| `Payment Method` | String | UPI / Credit Card / Debit Card / Cash |
+| `Customer Ratings` | Int | Satisfaction rating (1=Lowest, 5=Highest) |
 
 ### Date Table (Auto-generated)
 
-| Column | Type | Description |
-|--------|------|-------------|
-| `Date` | DateTime | Full date value |
-| `Year` | Int | Calendar year |
-| `MonthNo` | Int | Month number (1–12) |
-| `Month` | String | Month name (e.g. January) |
-| `QuarterNo` | Int | Quarter number (1–4) |
-| `Quarter` | String | Quarter label (e.g. Q1) |
-| `Day` | Int | Day of the month |
+| Column | Description |
+|--------|-------------|
+| `Date` | Full date value |
+| `Year` | Calendar year |
+| `MonthNo` | Month number (1–12) |
+| `Month` | Month name |
+| `QuarterNo` | Quarter number (1–4) |
+| `Quarter` | Quarter label (Q1–Q4) |
+| `Day` | Day of the month |
 
 ---
 
@@ -79,104 +89,138 @@ Data covering **4K transactions** across **19K units sold**, generating **₹769
 
 ### 🔴 Business Problem
 
-Sales teams and regional managers often struggle to identify:
+Sales teams and regional managers struggle to quickly answer:
 
-- Which cities and mobile models are driving the most revenue?
-- Are there seasonal trends in monthly quantity sold?
-- Which payment methods are most preferred by customers?
-- How do customer ratings vary and what does satisfaction look like overall?
+- Which cities and brands are driving the most revenue?
+- Which customer age groups represent the highest value segment?
+- Are there seasonal trends in monthly sales volume?
+- Which payment methods are most preferred?
+- How does customer satisfaction vary across brands and models?
 
-…these questions are difficult to answer quickly from raw transactional data.
+### 🎯 Dashboard Goals
 
----
-
-### 🎯 Goal of the Dashboard
-
-To deliver an interactive visual tool that:
-
-- Gives sales leadership a real-time view of total sales, quantity, and transactions at a glance.
-- Enables regional analysis through an interactive map of sales by city across India.
-- Supports product and inventory decisions by highlighting top-performing mobile models.
-- Helps understand customer satisfaction trends through ratings distribution.
+- Give leadership a real-time view of revenue, quantity, and transactions at a glance
+- Enable regional analysis through an interactive map of sales across 19 Indian cities
+- Support product decisions by highlighting top-performing brands and models
+- Uncover customer demographic patterns through age segmentation
+- Track satisfaction trends through ratings distribution
 
 ---
 
-### 🖼️ Walkthrough of Key Visuals
+## 🖼️ Walkthrough of Key Visuals
 
-- **Key KPIs (Top Row)**
-  - Total Sales: **₹769M**
-  - Total Quantity: **19K units**
-  - Transactions: **4K**
-  - Average Price Per Unit: **₹40K**
+### Key KPIs (Top Row)
+- **Total Sales**: ₹769M
+- **Total Quantity**: 19K units
+- **Transactions**: 4K
+- **Avg Price Per Unit**: ₹40K
+- **Avg Customer Rating**: 3.70 / 5
 
-- **Month Slicer (Left Panel)**
-  An interactive filter allowing users to drill down by any month (January–December) — updating all visuals simultaneously.
+### Month Slicer (Left Panel)
+Vertical list slicer (January–December) updating all visuals simultaneously.
 
-- **Mobile Model Slicer (Top Right)**
-  Dropdown filter to isolate performance of a specific mobile model across all visuals.
+### Mobile Model & Brand Slicers
+Dropdown filters to isolate any specific model or brand across all visuals.
 
-- **Total Sales by City (Map Visual)**
-  An interactive map plotting sales volume across Indian cities including Mumbai, Delhi, Bangalore, Hyderabad, Chennai, Kolkata, and more.
+### Total Sales by City (Map Visual)
+Interactive map plotting revenue across 19 cities including Mumbai, Delhi, Bangalore, Hyderabad, Chennai, Kolkata, Ludhiana, Jodhpur, and more.
 
-- **Total Quantity by Month (Line Chart)**
-  Tracks monthly unit sales across the year. Peak month is **July (1,700 units)** and the lowest is **February (1,451 units)**, indicating mid-year demand spikes.
+### Total Quantity by Month (Line Chart)
+Tracks monthly unit sales across the year:
+- **Peak**: July — 1,700 units
+- **Dip**: February — 1,451 units
+- Indicates mid-year demand spikes useful for inventory planning.
 
-- **Top 5 Mobile Models by Sales (Table)**
-  Ranks the top 5 models by Total Sales, Quantity, and Transactions:
-  - Galaxy Note 20: ₹56M | 1,382 units | 266 transactions
-  - iPhone SE: ₹59.6M | 1,430 units | 280 transactions
-  - OnePlus Nord: ₹57.9M | 1,409 units | 273 transactions
-  - Galaxy S21: ₹53.3M | 1,305 units | 260 transactions
-  - Vivo Y51: ₹54.8M | 1,429 units | 283 transactions
+### Brand Revenue Comparison (Bar Chart)
+Apple leads at ₹162M, followed closely by Samsung (₹160M), OnePlus (₹154M), Vivo (₹150M), and Xiaomi (₹144M). Competitive landscape with no dominant brand.
 
-- **Transactions by Payment Method (Pie Chart)**
-  Breaks down transactions by payment type:
-  - UPI: **26.25%**
-  - Credit Card: **25.89%**
-  - Cash: **25.03%**
-  - Debit Card: **22.83%**
-  Payment methods are nearly evenly distributed, indicating no single dominant channel.
+### Customer Age Segmentation (Bar Chart)
+- **45–59**: Highest revenue segment — ₹269M (35% share)
+- **25–34**: Second largest — ₹191M
+- Signals opportunity to target premium models toward the 45+ segment.
 
-- **Customer Ratings (Bar Chart)**
-  Distribution of customer satisfaction ratings:
-  - 5 stars: **311** customers
-  - 4 stars: **185**
-  - 3 stars: **137**
-  - 2 stars: **119**
-  - 1 star: **67**
-  Majority of customers (311) gave the highest rating, reflecting strong satisfaction.
+### Top 5 Mobile Models by Sales (Table)
+| Model | Total Sales | Quantity | Transactions |
+|-------|------------|----------|--------------|
+| iPhone SE | ₹59.6M | 1,430 | 280 |
+| OnePlus Nord | ₹57.9M | 1,409 | 273 |
+| Galaxy Note 20 | ₹56.0M | 1,382 | 266 |
+| Vivo Y51 | ₹54.8M | 1,429 | 283 |
+| Galaxy S21 | ₹53.3M | 1,305 | 260 |
 
-- **Total Sales by Day Name (Area Chart)**
-  Saturday leads with **₹115M** in sales, while Wednesday is the lowest at **₹105M** — weekends consistently outperform weekdays.
+### Transactions by Payment Method (Bar Chart)
+- UPI: 26.25%
+- Credit Card: 25.89%
+- Cash: 25.03%
+- Debit Card: 22.83%
 
-- **Total Sales by Mobile Model (Bar Chart)**
-  iPhone SE leads at **₹60M**, followed by OnePlus Nord (**₹58M**) and Galaxy Note 20 (**₹56M**).
+Near-equal distribution across all four channels — investment in all payment infrastructure is justified.
+
+### Customer Ratings Distribution (Bar Chart)
+- 5 stars: 311 | 4 stars: 185 | 3 stars: 137 | 2 stars: 119 | 1 star: 67
+- Overall satisfaction is positive but the 119 two-star ratings warrant investigation.
+
+### Total Sales by Day of Week (Bar Chart)
+Saturday leads at ₹115M; Wednesday is lowest at ₹105M. Weekend peaks support scheduling of flash sales and campaigns.
 
 ---
 
-### 💡 Business Impact & Insights
+## 💡 Business Impact & Insights
 
-- **📍 Regional Strategy**: The city map highlights high-performing urban centres, helping sales teams prioritise distribution and marketing spend geographically.
-- **📅 Seasonal Planning**: The February dip (1,451 units) and July peak (1,700 units) can guide inventory planning and promotional campaign timing.
-- **📱 Product Focus**: iPhone SE and OnePlus Nord consistently rank at the top by both revenue and volume — strong candidates for featured promotions.
-- **💳 Payment Infrastructure**: Near-equal payment method distribution suggests investment in all four payment channels (UPI, cards, cash) is justified.
-- **⭐ Customer Satisfaction**: With 311 five-star ratings and only 67 one-star ratings, overall satisfaction is healthy — but the 119 two-star ratings warrant further investigation.
-- **📆 Weekend Peaks**: Saturday and Monday outperform mid-week days — a useful insight for scheduling flash sales or targeted campaigns.
+| Insight | Recommended Action |
+|---------|-------------------|
+| 💰 Apple & Samsung lead revenue but margins are similar across all 5 brands | Avoid over-investing in a single brand — diversified stock recommended |
+| 👥 45–59 age group drives 35% of revenue | Target premium/flagship models toward this demographic |
+| 📅 February dip (1,451 units) and July peak (1,700 units) | Plan promotional campaigns in Feb; ensure stock levels for July |
+| 💳 Near-equal payment method split | Maintain and invest equally in UPI, card, and cash infrastructure |
+| 📆 Saturday consistently outperforms weekdays | Schedule weekend-specific flash sales and offers |
+| ⭐ 119 two-star ratings (12% of reviews) | Investigate — likely driven by specific models or cities |
 
 ---
 
 ## 📸 Dashboard Preview
 
-![Motorola Sales Dashboard](https://github.com/harshvgupta98/POWERBI_Motorola_Sales_Dashboard/blob/main/Snapshot%20of%20Motorola%20Sales%20Dashboard.png)
+![Mobile Sales Dashboard](https://github.com/harshvgupta98/POWERBI_Motorola_Sales_Dashboard/blob/main/Snapshot%20of%20Mobile%20Sales%20Dashboard.png)
 
 ---
 
 ## 📁 File Structure
 
 ```
-Motorola_Sales_Dashboard/
-├── Motorola_Sales_Dashboard.pbit   # Power BI Template file
-├── Mobile_Sales_Data.xlsx          # Source dataset
-├── Motorola_Sales_Dashboard.png    # Dashboard preview
+mobile-sales-dashboard/
+├── Motorola_Sales_Dashboard.pbit        # Power BI Template file
+├── Mobile_Sales_Data.xlsx               # Source dataset (3,835 transactions)
+├── Mobile_Sales_Dashboard.xlsx   # Supplementary Excel analysis workbook
+├── Snapshot_of_Motorola_Sales_Dashboard.png  # Dashboard preview
 └── README.md
 ```
+
+---
+
+## 🛠️ How to Use
+
+1. Download `Motorola_Sales_Dashboard.pbit` and `Mobile_Sales_Data.xlsx`
+2. Open the `.pbit` file in Power BI Desktop
+3. When prompted, point to `Mobile_Sales_Data.xlsx` as the data source
+4. Navigate the dashboard using the **Month slicer** and **Mobile Model dropdown**
+5. Use the **map visual** to drill into specific cities
+6. Open `Mobile_Sales_Dashboard.xlsx` for a detailed tabular breakdown by brand, city, age group, and day of week
+
+> ⚠️ The `.pbit` file is a Power BI Template — it does not contain data itself. You must connect it to `Mobile_Sales_Data.xlsx` on first open.
+
+---
+
+## 💡 Key Power BI / DAX Concepts Used
+
+| Concept | Applied In |
+|---------|-----------|
+| `SUMX` row-by-row iteration | Total Sales measure (price × units per row) |
+| `COUNTROWS` | Transactions count measure |
+| `PREVIOUSMONTH` time intelligence | Month-over-month sales comparison |
+| `DIVIDE` with safe division | MoM % change without divide-by-zero errors |
+| Auto date table relationships | Monthly and day-of-week time intelligence |
+| Map visual with geocoding | City-level geographic distribution |
+| Slicers (list + dropdown) | Month and model interactive filtering |
+| Formatted KPI cards | At-a-glance summary metrics |
+| Bar charts for categorical data | Brand, model, payment, day comparisons |
+| Line chart for time series | Monthly quantity trend |
